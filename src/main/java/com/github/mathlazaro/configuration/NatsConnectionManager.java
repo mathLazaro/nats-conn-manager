@@ -10,6 +10,9 @@ import lombok.extern.log4j.Log4j2;
 import java.io.IOException;
 import java.util.function.Function;
 
+/**
+ * Classe responsável por gerenciar a conexao com o NATS
+ */
 @Log4j2
 public class NatsConnectionManager {
 
@@ -21,6 +24,11 @@ public class NatsConnectionManager {
     private final Connection nc;
 
 
+    /**
+     * Listener de conexão para logar eventos de conexão e desconexão
+     *
+     * @param projectNickname
+     */
     private record ConnectionListenerImpl(String projectNickname) implements ConnectionListener {
 
         @Override
@@ -50,6 +58,11 @@ public class NatsConnectionManager {
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdownProducer));
     }
 
+    /**
+     * Abre a conexão com o NATS usando as opções configuradas, a conexão é aberta automaticamente ao instanciar a classe
+     *
+     * @return NATS connection
+     */
     private Connection openConnection() {
         try {
             log.info("Iniciando conexao no servidor NATS: {}", options.getServers().stream().findFirst().map(Object::toString).orElse(""));
@@ -60,6 +73,12 @@ public class NatsConnectionManager {
         }
     }
 
+    /**
+     * Abstari a conexão Request-Reply do nats, o callback é chamado toda vez que uma mensagem chegar no subject, a resposta é enviada automaticamente para o replyTo da mensagem
+     *
+     * @param subject  subject do tópico a ser subscrito o handler
+     * @param callback callback responsável por lidar com os dados recebidos
+     */
     public void publishReply(String subject, Function<Message, EventDTO<?>> callback) {
         Dispatcher dispatcher = nc.createDispatcher(msg -> {
             EventDTO<?> payload = callback.apply(msg);
@@ -77,6 +96,12 @@ public class NatsConnectionManager {
         dispatcher.subscribe(subject);
     }
 
+    /**
+     * Abstrai a publicação de eventos no NATS
+     *
+     * @param subject subject do tópico a ser publicado
+     * @param event   payload da mensagem
+     */
     public void publish(String subject, EventDTO<?> event) {
         byte[] data;
         try {
@@ -88,7 +113,10 @@ public class NatsConnectionManager {
         nc.publish(subject, data);
     }
 
-    private void closeConnection() {
+    /**
+     * Fecha a conexão do NATS
+     */
+    public void closeConnection() {
         if (nc == null) {
             log.error("Nenhuma conexão para fechar");
             return;
@@ -102,6 +130,9 @@ public class NatsConnectionManager {
         }
     }
 
+    /**
+     * Lida com o encerramento inesperado da thread principal
+     */
     private void shutdownProducer() {
         log.info("Iniciando shutdown do producer");
         closeConnection();
