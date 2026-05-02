@@ -27,7 +27,7 @@ Adicione a dependência ao seu `pom.xml`:
 <dependency>
     <groupId>com.github.mathlazaro</groupId>
     <artifactId>nats-conn-manager</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
@@ -266,7 +266,7 @@ Este projeto é parte de um trabalho acadêmico de Sistemas Distribuídos.
 
 ---
 
-**Versão**: 1.0-1  
+**Versão**: 1.0.1  
 **Autor**: Matheus Lázaro  
 **Última atualização**: Maio 2026
 

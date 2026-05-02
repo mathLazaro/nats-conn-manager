@@ -6,7 +6,7 @@
 
     <groupId>com.github.mathlazaro</groupId>
     <artifactId>nats-conn-manager</artifactId>
-    <version>1.0-1</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <distributionManagement>
@@ -39,11 +39,6 @@
             <groupId>io.nats</groupId>
             <artifactId>jnats</artifactId>
             <version>2.16.0</version>
-        </dependency>
-        <dependency>
-            <groupId>br.com.seuprojeto.distribuidos</groupId>
-            <artifactId>atividade-rmi-shared</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
